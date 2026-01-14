@@ -123,7 +123,7 @@ with open("ans3.txt", "wb") as f:
 
 - **结果**：
 
-![image-20260113215040177](C:\Users\21165\AppData\Roaming\Typora\typora-user-images\image-20260113215040177.png)
+![image-20260114104145781](C:\Users\21165\AppData\Roaming\Typora\typora-user-images\image-20260114104145781.png)
 
 
 
@@ -131,7 +131,17 @@ with open("ans3.txt", "wb") as f:
 
 - **分析**：
   - **Canary 机制分析**： 通过 `objdump` 查看 `func` 函数汇编，明确发现了 Canary 的保护机制：
-    1. **设置 Canary**：在函数开头，从 `%fs:0x28` 取出随机值放入栈底 (`-0x8(%rbp)`)。 ![请在此处插入截图：objdump 中 problem4 设置 Canary 的汇编代码 (mov %fs:0x28, %rax ...)]
+    1. **设置 Canary**：在函数开头，从 `%fs:0x28` 取出随机值放入栈底 (`-0x8(%rbp)`)。
+    
+       ```c++
+       136c: 64 48 8b 04 25 28 00    mov    %fs:0x28,%rax   ;
+       // [1] 从 fs 段寄存器取出随机的 Canary 值
+       1373: 00 00 
+       1375: 48 89 45 f8             mov    %rax,-0x8(%rbp) ;
+       //[2] 将 Canary 值放入栈中 (rbp-8)
+       ```
+    
+       
     
     2. **检查 Canary**：在函数结尾，取出栈中该值与 `%fs:0x28` 比较，若不相等则调用 `__stack_chk_fail` 报错。
     
